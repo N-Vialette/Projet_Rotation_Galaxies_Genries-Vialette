@@ -1,5 +1,9 @@
 #include <stdio.h>
-#include<math.h>
+#include <math.h>
+
+/*
+f : fonction à intégrer dans le calcul de K(x)
+*/
 
 float f(float x, float teta){
     float func,pi = 3.141592653589793;
@@ -27,9 +31,13 @@ float K(float x){
 	return 1/pi*Isim;
 }
 
+/*
+g : fonction à intégrer dans le calcul de Meff(r) en prenant ici le modèle de Kuzmin-Toore pour la densité de surface
+*/
+
 float g(float r_prime, float r){
-    float gunc,pi = 3.141592653589793, sigma=1e10, rc=1, x= r_prime/r;
-    gunc = sigma/pow(1+(r_prime/rc)*(r_prime/rc),1.5)*r_prime*K(x);
+    float gunc,pi = 3.141592653589793, sigma0=1e10, rc=1, x= r_prime/r;
+    gunc = sigma0/pow(1+(r_prime/rc)*(r_prime/rc),1.5)*r_prime*K(x);
     return gunc;
 }
 
@@ -57,6 +65,10 @@ float v(float r){
     return sqrt(G*Meff(r)/r);
 }
 
+/*
+Solution analytique - disque de Kuzmin-Toomre
+*/
+
 float vkt_exact(float r){
     float G = 4.3e-6, rc=1, pi=3.141592653589793, sigma=1e10;
     float Mtot=2*pi*sigma*rc*rc;
@@ -75,7 +87,7 @@ int main(){
     fclose(fich);
 
     FILE *fich2;
-	fich2 = fopen("vitesse.csv","w");
+	fich2 = fopen("vitesse_kt.csv","w");
 	float r;
     for ( r = 0.1; r < 10; r += 0.1){
         fprintf(fich2, "%f %f %f\n", r,v(r),vkt_exact(r));
